@@ -1,5 +1,9 @@
 package com.pravarcoding;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 
@@ -19,18 +23,53 @@ class Menu {
     }
 
 }
+class Reader1 {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
 
-//class Slots {
-//    // CONSTRUCTOR
-//    Slots(){
-//
-//    }
-//    // METHOD TO ADD SLOTS BY THE HOSPITAL
-//    public static void add_slot_for_vaccination (int hospitalID, int no_of_slots, int day_number, int quantity) {
-//
-//    }
-//
-//}
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            //TODO add check for eof if necessary
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+    static String nextLine() throws IOException {
+        return reader.readLine();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+}
+
+class Slots {
+    int hospital_id;
+    String vaccine_name;
+    int quantity;
+    int day_number;
+
+    // CONSTRUCTOR
+    Slots(int hospital_id, String vaccine_name, int quantity, int day_number){
+        this.hospital_id = hospital_id;
+        this.vaccine_name = vaccine_name;
+        this.quantity = quantity;
+        this.day_number = day_number;
+    }
+
+}
 class Vaccine {
     String  name;
     private int number_of_doses;
@@ -48,12 +87,12 @@ class Vaccine {
 class Citizen {
     private String name;
     private int age;
-    private int uniqueID;
+    private long uniqueID;
     String vaccination_status;
     
 
     // CONSTRUCTOR FOR CITIZEN CLASS : 
-    Citizen(String name, int age, int uniqueID) {
+    Citizen(String name, int age, long uniqueID) {
         vaccination_status = "REGISTERED";
         this.name = name;
         this.age = age;
@@ -77,13 +116,13 @@ class Hospital {
 
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // ARRAYS CREATED FOR STORING INFORMATION :
         ArrayList<Citizen> citizenArrayList = new ArrayList<>();
         ArrayList<Hospital> hospitalArrayList = new ArrayList<>();
         ArrayList<ArrayList<Integer>> details_of_slot_registration_of_hospitals = new ArrayList<>();
         ArrayList<Vaccine> types_of_vaccines = new ArrayList<>();
-        ArrayList<String> vaccine_names = new ArrayList<>();
+        ArrayList<Slots> slotsArrayList = new ArrayList<>();
 
         // MENU OBJECT CREATED
         Menu m = new Menu();
@@ -92,6 +131,7 @@ public class Main {
         // WHILE LOOP STARTED FOR SIMULATION
         while (true) {
             Scanner sc = new Scanner(System.in);
+            Reader1.init(System.in);
             System.out.println("enter menu index value : ");
 
             int menu_index = sc.nextInt();
@@ -134,7 +174,7 @@ public class Main {
                 System.out.print("Age: ");
                 int age = sc.nextInt();
                 System.out.print("Unique ID: ");
-                int uniqueID = sc.nextInt();
+                long uniqueID = sc.nextLong();
 
                 if (age > 18) {
                     Citizen citizen = new Citizen(name, age, uniqueID);
@@ -149,10 +189,8 @@ public class Main {
                     System.out.println();
                     m.showMenu();
                 }
-
             }
             // REGISTERED HOSPITALS ADDING SLOTS FOR VACCINATIONs
-            // LOGIC BEHIND THIS : we used combined_parameters_array to combine details and appended it to the details_of_slot_registration_of_hospitals.
             else if (menu_index == 4) {
                 System.out.print("Enter Hospital ID: ");
                 int hospitalID = sc.nextInt();
@@ -162,40 +200,29 @@ public class Main {
                 int no_of_slots = sc.nextInt();
 
                 for (int i = 0; i < no_of_slots; i ++) {
-                    ArrayList<Integer> combined_parameters_array = new ArrayList<>();
-                    combined_parameters_array.add(hospitalID);
                     System.out.print("Enter day number: ");
                     int day_number = sc.nextInt();
-                    combined_parameters_array.add(day_number);
 
                     System.out.print("Enter Quantity: ");
                     int quantity = sc.nextInt();
-                    combined_parameters_array.add(quantity);
 
                     System.out.println("Select vaccine: ");
                     for (int j = 0; j < types_of_vaccines.size(); j++) {
                         System.out.println(j + ". " + types_of_vaccines.get(j).name);
                     }
                     int vaccine = sc.nextInt();
-
-                    combined_parameters_array.add(vaccine);
+                    Slots slot = new Slots(hospitalID, types_of_vaccines.get(vaccine).name, quantity, day_number);
+                    slotsArrayList.add(slot);
                     System.out.println("Slot added by Hospital " + hospitalID + " for Day: " + day_number + ", Available Quantity: " + quantity + " of Vaccine " + types_of_vaccines.get(vaccine).name);
-                    details_of_slot_registration_of_hospitals.add(combined_parameters_array);
-
-                } m.showMenu();
+                }
+                m.showMenu();
             }
             else if (menu_index == 6) {
                 System.out.print("Enter Hospital ID: ");
                 int hospital_id = sc.nextInt();
-                for (int i = 0; i < details_of_slot_registration_of_hospitals.size(); i++) {
-                    if(details_of_slot_registration_of_hospitals.get(i).get(0) == hospital_id) {
-//                        if ( == 0) {
-                            System.out.println("Day: " + details_of_slot_registration_of_hospitals.get(i).get(1) + " Vaccine: " + types_of_vaccines.get(details_of_slot_registration_of_hospitals.get(i).get(3)).name + " Available Qty: " + details_of_slot_registration_of_hospitals.get(i).get(2));
-//                        }
-//                        else if (details_of_slot_registration_of_hospitals.get(i).get(3) == 1) {
-//                            System.out.println("Day: " + details_of_slot_registration_of_hospitals.get(i).get(1) + " Vaccine: covax Available Qty: " + details_of_slot_registration_of_hospitals.get(i).get(2));
-
-//                        }
+                for (int i = 0; i < slotsArrayList.size(); i++){
+                    if (slotsArrayList.get(i).hospital_id == hospital_id) {
+                        System.out.println("Day: " + slotsArrayList.get(i).day_number + " Vaccine: " + slotsArrayList.get(i).vaccine_name + " Available Qty: " + slotsArrayList.get(i).quantity);
                     }
                 }
             }
