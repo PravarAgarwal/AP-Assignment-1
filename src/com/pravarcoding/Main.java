@@ -174,7 +174,7 @@ public class Main {
 
                     System.out.println("Select vaccine: ");
                     for (int j = 0; j < types_of_vaccines.size(); j++) {
-                        System.out.println(i + ". " + types_of_vaccines.get(0).name);
+                        System.out.println(j + ". " + types_of_vaccines.get(j).name);
                     }
                     int vaccine = sc.nextInt();
 
