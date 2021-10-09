@@ -1,9 +1,7 @@
 package com.pravarcoding;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.*;
 
 
@@ -23,37 +21,8 @@ class Menu {
     }
 
 }
-class Reader1 {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
 
 
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            //TODO add check for eof if necessary
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-    static String nextLine() throws IOException {
-        return reader.readLine();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-}
 class Slots_Methods_Class {
     static Scanner sc = new Scanner(System.in);
     public void book_slot_by_pincode(long uniqueID_citizen, int pincode, ArrayList<Hospital> hospitalArrayList, ArrayList<Slots> slotsArrayList, ArrayList<Citizen> citizenArrayList, ArrayList<Vaccine> vaccineArrayList, ArrayList<String[]> fithPart) {
@@ -104,8 +73,55 @@ class Slots_Methods_Class {
 
         }
     }
-    public static void book_slot_by_vaccine(long uniqueID_citizen, int pincode, ArrayList<Hospital> hospitalArrayList, ArrayList<Slots> slotsArrayList, ArrayList<Citizen> citizenArrayList, ArrayList<Vaccine> vaccineArrayList, ArrayList<String[]> fithPart) {
+    public void book_slot_by_vaccine(long uniqueID_citizen, String vaccine_name, ArrayList<Hospital> hospitalArrayList, ArrayList<Slots> slotsArrayList, ArrayList<Citizen> citizenArrayList, ArrayList<Vaccine> vaccineArrayList, ArrayList<String[]> fithPart) {
+        for (int i = 0; i < slotsArrayList.size(); i++) {
+            for (int j = 0; j < hospitalArrayList.size(); j ++) {
+                if (slotsArrayList.get(i).vaccine_name.equals(vaccine_name) && slotsArrayList.get(i).hospital_id == hospitalArrayList.get(j).uniqueID) {
+                    System.out.println(slotsArrayList.get(i).hospital_id + " " + hospitalArrayList.get(j).name);
+                }
+            }
+        }
+        System.out.println("Enter hospital ID: ");
+        int hospital_id_u_want_to_book = sc.nextInt();
+        boolean flag = false;
 
+        for (int t = 0; t < slotsArrayList.size(); t++) {
+            if ((slotsArrayList.get(t).hospital_id == hospital_id_u_want_to_book)) {
+                System.out.println(slotsArrayList.get(t).slot + " -> Day: " + slotsArrayList.get(t).day_number + " Available Qty: " + slotsArrayList.get(t).quantity + " Vaccine: " + slotsArrayList.get(t).vaccine_name);
+                String temp = (slotsArrayList.get(t).slot + " -> Day: " + slotsArrayList.get(t).day_number + " Available Qty: " + slotsArrayList.get(t).quantity + " Vaccine: " + slotsArrayList.get(t).vaccine_name);
+                String[] temp_arr = temp.split(" ");
+                fithPart.add(temp_arr);
+
+
+            }
+            else {
+                System.out.println("No Slots Available");
+                flag = true;
+            }
+
+            if (flag) {
+                System.out.println("Choose Slot: ");
+                int choose_slot = sc.nextInt();
+                // REMOVING THIS SLOT FROM THE SLOTARRAYLIST AS IT IS CHOSEN BY THE CUSTOMER
+                for (int i = 0; i < citizenArrayList.size(); i++) {
+                    for (int j = 0; j < fithPart.size(); j++) {
+                        if ((citizenArrayList.get(i).uniqueID == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
+                            System.out.println(citizenArrayList.get(i).name + " vaccinated with " + fithPart.get(j)[8]);
+                            for (int k = 0; k < vaccineArrayList.size(); k++) {
+                                if (vaccineArrayList.get(k).name.equals(fithPart.get(j)[8])) {
+                                    if (citizenArrayList.get(i).number_of_doses_recieved > 0 && citizenArrayList.get(i).number_of_doses_recieved < vaccineArrayList.get(k).number_of_doses) {
+                                        citizenArrayList.get(i).vaccination_status = "PARTIALLY VACCINATED";
+                                    } else if (citizenArrayList.get(i).number_of_doses_recieved == vaccineArrayList.get(k).number_of_doses) {
+                                        citizenArrayList.get(i).vaccination_status = "FULLY VACCINATED";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
 class Slots {
@@ -126,7 +142,7 @@ class Slots {
     }
 }
 class Vaccine {
-    String  name;
+    String name;
     int number_of_doses;
     private int gap_between_doses;
 
@@ -161,6 +177,7 @@ class Hospital {
     String name;
     int pincode;
     int uniqueID;
+
     
     
     // CONSTRUCTOR FOR HOSPITAL CLASS : 
@@ -193,7 +210,6 @@ public class Main {
         // WHILE LOOP STARTED FOR SIMULATION
         while (true) {
             Scanner sc = new Scanner(System.in);
-            Reader1.init(System.in);
             System.out.println("enter menu index value : ");
 
             int menu_index = sc.nextInt();
@@ -227,7 +243,8 @@ public class Main {
                 Hospital hospital = new Hospital(name, pincode);
                 hospitalArrayList.add(hospital);
                 System.out.println("Hospital name: " + name + " PinCode: " + pincode + " Unique ID: " + hospital.uniqueID);
-
+                System.out.println(hospitalArrayList);
+                m.showMenu();
             }
             // REGISTER CITIZEN :
             else if (menu_index == 3) {
@@ -278,14 +295,8 @@ public class Main {
                             System.out.println("Slot added by Hospital " + hospitalID + " for Day: " + day_number + ", Available Quantity: " + quantity + " of Vaccine " + types_of_vaccines.get(vaccine).name);
                         }
                     }
-                    else {
-                        System.out.println("Hospital not registered");
-                    }
-                    m.showMenu();
                 }
-
-
-
+                m.showMenu();
             }
 
             else if (menu_index == 5) {
@@ -301,6 +312,12 @@ public class Main {
                     int pincode = sc.nextInt();
                     ArrayList<String[]> fithPart = new ArrayList<>();
                     methods.book_slot_by_pincode(id, pincode, hospitalArrayList, slotsArrayList, citizenArrayList, types_of_vaccines, fithPart);
+                }
+                if (option == 2) {
+                    System.out.println("Enter Vaccine name: ");
+                    String vaccine_name_entered = sc.next();
+                    ArrayList<String[]> fithPart = new ArrayList<>();
+                    methods.book_slot_by_vaccine(id, vaccine_name_entered, hospitalArrayList, slotsArrayList, citizenArrayList, types_of_vaccines, fithPart);
                 }
 
 //                if (option == 1) {
