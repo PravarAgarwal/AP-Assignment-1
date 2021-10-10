@@ -50,7 +50,7 @@ class Slots_Methods_Class {
             int choose_slot = sc.nextInt();
             // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
             for (int i = 0; i < slotsArrayList.size(); i++) {
-                if (slotsArrayList.get(i).getSlot() == choose_slot) {
+                if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
                     slotsArrayList.get(i).updateQuantity();
                 }
             }
@@ -120,13 +120,16 @@ class Slots_Methods_Class {
                         int choose_slot = sc.nextInt();
                         // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
                         for (int i = 0; i < slotsArrayList.size(); i++) {
-                            if (slotsArrayList.get(i).getSlot() == choose_slot) {
+                            if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
+
                                 slotsArrayList.get(i).updateQuantity();
                             }
                         }
+                        boolean flag = false;
                         for (int i = 0; i < citizenArrayList.size(); i++) {
                             for (int j = 0; j < fithPart.size(); j++) {
                                 if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
+                                    flag = true;
                                     System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
 
                                     // updating the vaccine received by the patient
@@ -151,6 +154,7 @@ class Slots_Methods_Class {
                                         }
                                     }
                                 }
+                                if (flag) break;
                             }
                         }
                     }
