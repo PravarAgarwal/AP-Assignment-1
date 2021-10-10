@@ -120,53 +120,58 @@ class Slots_Methods_Class {
 //                            }
 //
 //                        }
-                        System.out.println("Choose Slot: ");
-                        int choose_slot = sc.nextInt();
-                        // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
-                        for (int i = 0; i < slotsArrayList.size(); i++) {
-                            if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
+                    }
+                }
+                if (var == 0) {
+                    System.out.println("No slots available");
+                    return;
+                } else {
+                    System.out.println("Choose Slot: ");
+                    int choose_slot = sc.nextInt();
+                    // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
+                    for (int i = 0; i < slotsArrayList.size(); i++) {
+                        if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
 
-                                slotsArrayList.get(i).updateQuantity();
-                            }
+                            slotsArrayList.get(i).updateQuantity();
                         }
-                        boolean flag = false;
-                        for (int i = 0; i < citizenArrayList.size(); i++) {
-                            for (int j = 0; j < fithPart.size(); j++) {
-                                if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
-                                    flag = true;
-                                    System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
+                    }
+                    boolean flag = false;
+                    for (int i = 0; i < citizenArrayList.size(); i++) {
+                        for (int j = 0; j < fithPart.size(); j++) {
+                            if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
+                                flag = true;
+                                System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
 
-                                    // updating the vaccine received by the patient
-                                    citizenArrayList.get(i).setVaccine_received(fithPart.get(j)[8]);
+                                // updating the vaccine received by the patient
+                                citizenArrayList.get(i).setVaccine_received(fithPart.get(j)[8]);
 
-                                    // incrementing the number of doses received by the patient
-                                    citizenArrayList.get(i).setNumber_of_doses_recieved(citizenArrayList.get(i).getNumber_of_doses_received() + 1);
-                                    for (int k = 0; k < vaccineArrayList.size(); k++) {
-                                        if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
+                                // incrementing the number of doses received by the patient
+                                citizenArrayList.get(i).setNumber_of_doses_recieved(citizenArrayList.get(i).getNumber_of_doses_received() + 1);
+                                for (int k = 0; k < vaccineArrayList.size(); k++) {
+                                    if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
 
-                                            // updating the value of due date
-                                            citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
+                                        // updating the value of due date
+                                        citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
 
-                                            // handling the status of vaccination of patient
-                                            if (citizenArrayList.get(i).getNumber_of_doses_received() > 0 && citizenArrayList.get(i).getNumber_of_doses_received() < vaccineArrayList.get(k).getNumber_of_doses()) {
-                                                citizenArrayList.get(i).setVaccination_status("PARTIALLY VACCINATED");
-                                            }
-                                            else if (citizenArrayList.get(i).getNumber_of_doses_received() == vaccineArrayList.get(k).getNumber_of_doses()) {
-                                                citizenArrayList.get(i).setVaccination_status("FULLY VACCINATED");
-                                            }
+                                        // handling the status of vaccination of patient
+                                        if (citizenArrayList.get(i).getNumber_of_doses_received() > 0 && citizenArrayList.get(i).getNumber_of_doses_received() < vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("PARTIALLY VACCINATED");
+                                        } else if (citizenArrayList.get(i).getNumber_of_doses_received() == vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("FULLY VACCINATED");
                                         }
                                     }
                                 }
-                                if (flag) break;
-                            }if (flag) break;
+                            }
+                            if (flag) break;
                         }
+                        if (flag) break;
                     }
-
                 }
-
             }
-        }if (var == 0) {
-            System.out.println("No slots available");
+
+
+
+
         }
 
 
