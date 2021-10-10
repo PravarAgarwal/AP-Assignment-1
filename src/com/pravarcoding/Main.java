@@ -100,22 +100,26 @@ class Slots_Methods_Class {
         int hospital_id_u_want_to_book = sc.nextInt();
         int var = 0;
         for (int p = 0; p < slotsArrayList.size(); p++) {
-            if (slotsArrayList.get(p).getHospital_id() == hospital_id_u_want_to_book) {
+            if (slotsArrayList.get(p).getHospital_id() == hospital_id_u_want_to_book && slotsArrayList.get(p).getVaccine_name().equals(vaccine_name)) {
+
                 for (int q = 0; q < citizenArrayList.size(); q++) {
                     if (citizenArrayList.get(q).getDueDate() <= slotsArrayList.get(p).getDay_number()) {
-                        System.out.println("due date is : " + citizenArrayList.get(q).getDueDate());
                         var++;
-                        for (int t = 0; t < slotsArrayList.size(); t++) {
-                            if ((slotsArrayList.get(t).getHospital_id() == hospital_id_u_want_to_book) && slotsArrayList.get(t).getVaccine_name().equals(vaccine_name)) {
-
-                                System.out.println(slotsArrayList.get(t).getSlot() + " -> Day: " + slotsArrayList.get(t).getDay_number() + " Available Qty: " + slotsArrayList.get(t).getQuantity() + " Vaccine: " + slotsArrayList.get(t).getVaccine_name());
-                                String temp = (slotsArrayList.get(t).getSlot() + " -> Day: " + slotsArrayList.get(t).getDay_number() + " Available Qty: " + slotsArrayList.get(t).getQuantity() + " Vaccine: " + slotsArrayList.get(t).getVaccine_name());
-                                String[] temp_arr = temp.split(" ");
-                                fithPart.add(temp_arr);
-
-                            }
-
-                        }
+                        System.out.println(slotsArrayList.get(p).getSlot() + " -> Day: " + slotsArrayList.get(p).getDay_number() + " Available Qty: " + slotsArrayList.get(p).getQuantity() + " Vaccine: " + slotsArrayList.get(p).getVaccine_name());
+                        String temp = (slotsArrayList.get(p).getSlot() + " -> Day: " + slotsArrayList.get(p).getDay_number() + " Available Qty: " + slotsArrayList.get(p).getQuantity() + " Vaccine: " + slotsArrayList.get(p).getVaccine_name());
+                        String[] temp_arr = temp.split(" ");
+                        fithPart.add(temp_arr);
+//                        for (int t = 0; t < slotsArrayList.size(); t++) {
+//                            if ((slotsArrayList.get(t).getHospital_id() == hospital_id_u_want_to_book) )) {
+//
+//                                System.out.println(slotsArrayList.get(t).getSlot() + " -> Day: " + slotsArrayList.get(t).getDay_number() + " Available Qty: " + slotsArrayList.get(t).getQuantity() + " Vaccine: " + slotsArrayList.get(t).getVaccine_name());
+//                                String temp = (slotsArrayList.get(t).getSlot() + " -> Day: " + slotsArrayList.get(t).getDay_number() + " Available Qty: " + slotsArrayList.get(t).getQuantity() + " Vaccine: " + slotsArrayList.get(t).getVaccine_name());
+//                                String[] temp_arr = temp.split(" ");
+//                                fithPart.add(temp_arr);
+//
+//                            }
+//
+//                        }
                         System.out.println("Choose Slot: ");
                         int choose_slot = sc.nextInt();
                         // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
@@ -141,7 +145,6 @@ class Slots_Methods_Class {
                                         if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
 
                                             // updating the value of due date
-                                            int previous_due_date = citizenArrayList.get(i).getDueDate();
                                             citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
 
                                             // handling the status of vaccination of patient
@@ -155,16 +158,17 @@ class Slots_Methods_Class {
                                     }
                                 }
                                 if (flag) break;
-                            }
+                            }if (flag) break;
                         }
                     }
 
                 }
+
             }
-        }
-        if (var == 0) {
+        }if (var == 0) {
             System.out.println("No slots available");
         }
+
 
 
 
