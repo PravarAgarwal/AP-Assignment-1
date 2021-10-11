@@ -34,6 +34,7 @@ class Slots_Methods_Class {
         int hospital_id_u_want_to_book = sc.nextInt();
         int count = 0;
 
+
         for (int t = 0; t < slotsArrayList.size(); t++) {
             // for printing the slots available for the respective chosen hospital.
             if ((slotsArrayList.get(t).getHospital_id() == hospital_id_u_want_to_book)) {
@@ -46,50 +47,96 @@ class Slots_Methods_Class {
                         fithPart.add(temp_arr);
                     }
                 }
-
             }
         }
         if (count > 0) {
             System.out.println("Choose Slot: ");
             int choose_slot = sc.nextInt();
-            // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
-            for (int i = 0; i < slotsArrayList.size(); i++) {
-                if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
-                    slotsArrayList.get(i).updateQuantity();
-                }
-            }
-            for (int i = 0; i < citizenArrayList.size(); i++) {
-                for (int j = 0; j < fithPart.size(); j++) {
-                    if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
-                        System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
+            String temp_vaccine = slotsArrayList.get(choose_slot).getVaccine_name();
+            for (int u = 0; u < citizenArrayList.size(); u++) {
+                if (citizenArrayList.get(u).getUniqueID() == uniqueID_citizen && citizenArrayList.get(u).getVaccination_status().equals("PARTIALLY VACCINATED") && citizenArrayList.get(u).getVaccine_received().equals(temp_vaccine)) {
 
-                        // updating the vaccine received by the patient
-                        citizenArrayList.get(i).setVaccine_received(fithPart.get(j)[8]);
+                    // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
+                    for (int i = 0; i < slotsArrayList.size(); i++) {
+                        if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
+                            slotsArrayList.get(i).updateQuantity();
+                        }
+                    }
+                    for (int i = 0; i < citizenArrayList.size(); i++) {
+                        for (int j = 0; j < fithPart.size(); j++) {
+                            if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
+                                System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
 
-                        // incrementing the number of doses received by the patient
-                        citizenArrayList.get(i).setNumber_of_doses_recieved(citizenArrayList.get(i).getNumber_of_doses_received() + 1);
+                                // updating the vaccine received by the patient
+                                citizenArrayList.get(i).setVaccine_received(fithPart.get(j)[8]);
 
-                        for (int k = 0; k < vaccineArrayList.size(); k++) {
-                            if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
+                                // incrementing the number of doses received by the patient
+                                citizenArrayList.get(i).setNumber_of_doses_recieved(citizenArrayList.get(i).getNumber_of_doses_received() + 1);
 
-                                // updating the value of due date
-                                citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
+                                for (int k = 0; k < vaccineArrayList.size(); k++) {
+                                    if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
 
-                                // handling the status of vaccination of patient
-                                if (citizenArrayList.get(i).getNumber_of_doses_received() > 0 && citizenArrayList.get(i).getNumber_of_doses_received() < vaccineArrayList.get(k).getNumber_of_doses()) {
-                                    citizenArrayList.get(i).setVaccination_status("PARTIALLY VACCINATED");
-                                } else if (citizenArrayList.get(i).getNumber_of_doses_received() == vaccineArrayList.get(k).getNumber_of_doses()) {
-                                    citizenArrayList.get(i).setVaccination_status("FULLY VACCINATED");
+                                        // updating the value of due date
+                                        citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
+
+                                        // handling the status of vaccination of patient
+                                        if (citizenArrayList.get(i).getNumber_of_doses_received() > 0 && citizenArrayList.get(i).getNumber_of_doses_received() < vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("PARTIALLY VACCINATED");
+                                        } else if (citizenArrayList.get(i).getNumber_of_doses_received() == vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("FULLY VACCINATED");
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                else if (citizenArrayList.get(u).getUniqueID() == uniqueID_citizen && citizenArrayList.get(u).getVaccination_status().equals("REGISTERED")) {
+
+                    // once the slot is chosen, the associated quantity of vaccine with it is lowered by 1
+                    for (int i = 0; i < slotsArrayList.size(); i++) {
+                        if (slotsArrayList.get(i).getSlot() == choose_slot && (slotsArrayList.get(i).getHospital_id() == hospital_id_u_want_to_book)) {
+                            slotsArrayList.get(i).updateQuantity();
+                        }
+                    }
+                    for (int i = 0; i < citizenArrayList.size(); i++) {
+                        for (int j = 0; j < fithPart.size(); j++) {
+                            if ((citizenArrayList.get(i).getUniqueID() == uniqueID_citizen) && (fithPart.get(j)[0].equals(Integer.toString(choose_slot)))) {
+                                System.out.println(citizenArrayList.get(i).getName() + " vaccinated with " + fithPart.get(j)[8]);
+
+                                // updating the vaccine received by the patient
+                                citizenArrayList.get(i).setVaccine_received(fithPart.get(j)[8]);
+
+                                // incrementing the number of doses received by the patient
+                                citizenArrayList.get(i).setNumber_of_doses_recieved(citizenArrayList.get(i).getNumber_of_doses_received() + 1);
+
+                                for (int k = 0; k < vaccineArrayList.size(); k++) {
+                                    if (vaccineArrayList.get(k).getName().equals(fithPart.get(j)[8])) {
+
+                                        // updating the value of due date
+                                        citizenArrayList.get(i).setDueDate(vaccineArrayList.get(k).getGap_between_doses());
+
+                                        // handling the status of vaccination of patient
+                                        if (citizenArrayList.get(i).getNumber_of_doses_received() > 0 && citizenArrayList.get(i).getNumber_of_doses_received() < vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("PARTIALLY VACCINATED");
+                                        } else if (citizenArrayList.get(i).getNumber_of_doses_received() == vaccineArrayList.get(k).getNumber_of_doses()) {
+                                            citizenArrayList.get(i).setVaccination_status("FULLY VACCINATED");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else System.out.println("chosen option cannot be provided");
+                // two conditions possible : 1 ) already fully vaccinated 2 ) vaccine mixing
             }
+
+
         } else {
             System.out.println("no slots available");
 
-        }
+          }
     }
     public static void book_slot_by_vaccine(long uniqueID_citizen, String vaccine_name, ArrayList<Hospital> hospitalArrayList, ArrayList<Slots> slotsArrayList, ArrayList<Citizen> citizenArrayList, ArrayList<Vaccine> vaccineArrayList, ArrayList<String[]> fithPart) {
         for (int i = 0; i < slotsArrayList.size(); i++) {
@@ -168,8 +215,6 @@ class Slots_Methods_Class {
                     }
                 }
             }
-
-
 
 
         }
@@ -358,50 +403,7 @@ class Hospital {
 
     }
 }
-//class Status {
-//    private final long patient_id;
-//    private final String vaccine_given;
-//    private int doses;
-//    private String current_status;
-//    private int due_date;
-//
-//    // getter functions
-//    public long getPatient_id() {
-//        return this.patient_id;
-//    }
-//    public String getVaccine_given() {
-//        return this.vaccine_given;
-//    }
-//    public int getDoses() {
-//        return this.getDoses();
-//    }
-//    public String getCurrent_status() {
-//        return this.current_status;
-//    }
-//    public int getDue_date() {
-//        return this.getDue_date();
-//    }
-//
-//    // setter functions
-//    public void setDoses(int doses) {
-//        this.doses = doses;
-//    }
-//    public void setCurrent_status(String current_status) {
-//        this.current_status = current_status;
-//    }
-//    public void setDue_date (int due_date) {
-//        this.due_date = due_date;
-//    }
-//
-//    // CONSTRUCTOR
-//    Status (long patient_id, String vaccine_given, int doses, String current_status, int due_date) {
-//        this.current_status = current_status;
-//        this.vaccine_given = vaccine_given;
-//        this.doses = doses;
-//        this.patient_id = patient_id;
-//        this.due_date = due_date;
-//    }
-//}
+
 
 public class Main {
     public static void main(String[] args) {
